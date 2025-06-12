@@ -1,0 +1,72 @@
+---
+  hpc: True
+
+  local_root: C:/Users/az24148/Documents/PhD/Abil/Abil/
+  hpc_root: /user/work/az24148/Abil/
+
+  run_name: TangTest1 #update for specific run name
+  path_out:  studies/lim2024/ModelOutput/ #root + folder
+  path_in:  /predictions/mapie/ #root + folder
+
+  prediction: studies/lim2024/data/env_data.csv #root + folder
+  targets: studies/lim2024/data/traits_NF_rates.csv #root + folder
+  training: studies/lim2024/data/Tang19_NF_rates_env.csv
+
+  predictors: ["temperature", 
+    "sio4", "po4", "no3", 
+    "o2", "mld", "DIC", "TA",
+    "PAR","chlor_a","CI_2"]
+ 
+  verbose: 1
+  seed : 1 # random seed
+  n_threads : 10 # how many cpu threads to use, reduce when using higher cv's in MAPIE
+  cv : 10
+  predict_probability: False 
+
+  ensemble_config: 
+    classifier: False
+    regressor: True
+    m1: "rf"
+    m2: "xgb"
+    m3: "knn"
+    #m4: "mlp"
+     
+  upsample: False
+  stratify: False
+
+  reg_scoring:
+   R2: r2
+   MAE: neg_mean_absolute_error
+   RMSE: neg_root_mean_squared_error
+   tau: kendall_tau
+
+  param_grid:
+    rf_param_grid:
+      reg_param_grid:
+        regressor__estimator__n_estimators: [250]
+        regressor__estimator__max_features:  [0.2, 0.4, 0.6, 0.8, 1]
+        regressor__estimator__max_depth: [25, 51, 75]
+        regressor__estimator__min_samples_leaf: [1, 2, 5]
+        regressor__estimator__max_samples: [0.8, 0.85, 0.9, 1]   
+
+    xgb_param_grid:
+      reg_param_grid:  
+        regressor__estimator__learning_rate: [0.1, 0.15, 0.2]
+        regressor__estimator__n_estimators: [100]
+        regressor__estimator__max_depth: [5, 7, 51, 100]
+        regressor__estimator__subsample: [0.4, 0.6, 0.7, 0.8, 1]
+        regressor__estimator__colsample_bytree: [0.9, 0.95, 1]
+        regressor__estimator__gamma: [0] 
+        regressor__estimator__reg_alpha: [0, 0.1]
+
+    knn_param_grid:
+      reg_param_grid:  
+        regressor__estimator__max_samples: [0.8, 0.85, 0.9, 0.95, 1]
+        regressor__estimator__max_features: [0.3, 0.5, 0.7, 0.9, 1]
+        regressor__estimator__estimator__leaf_size: [1, 2, 3]
+        regressor__estimator__estimator__n_neighbors: [1, 2, 3]
+        regressor__estimator__estimator__p:  [1, 2]        
+        regressor__estimator__estimator__weights: ["uniform", "distance"]
+
+  knn_bagging_estimators: 30
+

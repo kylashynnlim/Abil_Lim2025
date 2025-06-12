@@ -3,10 +3,9 @@ ModelOutput/
 plotting/
 /data/
 _build/
-studies/wiseman2024/data
-studies/wiseman2024/preprocessing
-studies/wiseman2024/env_data_processing/raw_data
-studies/wiseman2024/env_data_processing/regridded_data
+studies/lim2024/data
+studies/lim2024/env_data_processing
+studies/lim2024/posts
 abil.sif
 __pycache__/
 abil/__pycache__/
